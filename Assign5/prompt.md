@@ -69,7 +69,7 @@ Examples:
                  "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
 - FUNCTION_CALL:{"name":"verify_method_response"}
 - FUNCTION_CALL:{"name":"send_email","arguments"
-                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+                 "arguments":{"email":"x@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
 - FINAL_ANSWER: {"name":"result","status":"completed"}
 
 DO NOT include any explanations or additional text.
