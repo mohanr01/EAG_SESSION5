@@ -1,0 +1,1286 @@
+D:\EAG\EAG_Session5\Assign5>python AgentClient.py
+Starting main execution...
+Establishing connection to MCP server...
+Connection established, creating session...
+Session created, initializing...
+Requesting tool list...
+Successfully retrieved 11 tools
+Creating system prompt...
+Number of tools: 11
+Added description for tool: 1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+Added description for tool: 2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+Added description for tool: 3. verify_method_response(response: string) - Verify if a calculation is correct
+Added description for tool: 4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+Added description for tool: 5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+Added description for tool: 6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+Added description for tool: 7. internal_self_check(result: string) - perform internal self check for every step before verify result
+Added description for tool: 8. add(a: integer, b: integer) - Add two numbers
+Added description for tool: 9. calculate(expression: string) - Calculate the result of an expression
+Added description for tool: 10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+Added description for tool: 11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+Successfully created tools description
+Created system prompt...
+Starting iteration loop...
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+LLM generation completed
+response:: {"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+Calling function show_reasoning with params ['1. First, solve the expression inside the parentheses: 10 + 2', '2. Then, divide the result by 2', '3. Open MS Paint and draw a rectangle', '4. Add the calculated result inside the rectangle', '5. Finally, complete the process']
+result of function: {"meta":null,"content":[{"type":"text","text":"Reasoning shown","annotations":null}],"isError":false}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+LLM generation completed
+response:: {"name":"calculate", "expression":"10 + 2"}
+params 10 + 2
+result of function: {"meta":null,"content":[{"type":"text","text":"12","annotations":null}],"isError":false}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+LLM generation completed
+response:: {"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+result of function: {"meta":null,"content":[{"type":"text","text":"True","annotations":null}],"isError":false}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+LLM generation completed
+response:: {"name":"calculate", "expression":"12 / 2"}
+params 12 / 2
+result of function: {"meta":null,"content":[{"type":"text","text":"6.0","annotations":null}],"isError":false}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+LLM generation completed
+response:: {"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+result of function: {"meta":null,"content":[{"type":"text","text":"True","annotations":null}],"isError":false}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+LLM generation completed
+response:: {"name":"open_paint"}
+result of function: {"meta":null,"content":[{"type":"text","text":"Paint opened successfully on secondary monitor and maximized","annotations":null}],"isError":false}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+Assitant:{"name":"open_paint"}
+ User: Paint opened successfully on secondary monitor and maximized,Next step?
+LLM generation completed
+response:: {"name":"verify_method_response", "status":"success"}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+Assitant:{"name":"open_paint"}
+ User: Paint opened successfully on secondary monitor and maximized,Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+LLM generation completed
+response:: {"name":"draw_rectangle_in_paint", "x1":780, "y1":380, "x2":1140, "y2":700}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+Assitant:{"name":"open_paint"}
+ User: Paint opened successfully on secondary monitor and maximized,Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+Assitant:{"name":"draw_rectangle_in_paint", "x1":780, "y1":380, "x2":1140, "y2":700}
+ User: Paint opened successfully on secondary monitor and maximized Next step?
+LLM generation completed
+response:: {"name":"verify_method_response", "status":"success"}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+Assitant:{"name":"open_paint"}
+ User: Paint opened successfully on secondary monitor and maximized,Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+Assitant:{"name":"draw_rectangle_in_paint", "x1":780, "y1":380, "x2":1140, "y2":700}
+ User: Paint opened successfully on secondary monitor and maximized Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+LLM generation completed
+response:: {"name":"add_text_in_rectangle", "x1":780, "y1":380, "x2":1140, "y2":700, "text":"Final result is 6"}
+Final result is 6
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+Assitant:{"name":"open_paint"}
+ User: Paint opened successfully on secondary monitor and maximized,Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+Assitant:{"name":"draw_rectangle_in_paint", "x1":780, "y1":380, "x2":1140, "y2":700}
+ User: Paint opened successfully on secondary monitor and maximized Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+Assitant:{"name":"add_text_in_rectangle", "x1":780, "y1":380, "x2":1140, "y2":700, "text":"Final result is 6"}
+User: Paint opened successfully on secondary monitor and maximized Next step?
+LLM generation completed
+response:: {"name":"verify_method_response", "status":"success"}
+Starting LLM generation...
+prompt:: You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+
+Query: Solve this problem (10+2)/2. Let's think step by step.
+Assitant:{"name":"show_reasoning", "reasoning_type":"arithmetic", "steps": ["1. First, solve the expression inside the parentheses: 10 + 2", "2. Then, divide the result by 2", "3. Open MS Paint and draw a rectangle", "4. Add the calculated result inside the rectangle", "5. Finally, complete the process"]}
+User: Next step?
+ Assitant:{"name":"calculate", "expression":"10 + 2"}
+ User: Result is 12. Next step?
+Assitant:{"name":"verify_calculation", "expression":"10 + 2", "expected":12}
+User: True Verified. Next step?
+ Assitant:{"name":"calculate", "expression":"12 / 2"}
+ User: Result is 6.0. Next step?
+Assitant:{"name":"verify_calculation", "expression":"12 / 2", "expected":6}
+User: True Verified. Next step?
+Assitant:{"name":"open_paint"}
+ User: Paint opened successfully on secondary monitor and maximized,Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+Assitant:{"name":"draw_rectangle_in_paint", "x1":780, "y1":380, "x2":1140, "y2":700}
+ User: Paint opened successfully on secondary monitor and maximized Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+Assitant:{"name":"add_text_in_rectangle", "x1":780, "y1":380, "x2":1140, "y2":700, "text":"Final result is 6"}
+User: Paint opened successfully on secondary monitor and maximized Next step?
+Assitant:{"name":"verify_method_response", "status":"success"}
+ User: Verified. Next step?
+LLM generation completed
+response:: {"name":"result", "status":"completed"}
+=======Evaluating the prompt==============
+Starting LLM generation...
+prompt:: You are a Prompt Evaluation Assistant.
+You will receive a prompt written by a student. Your job is to review this prompt and assess how well it supports structured, step-by-step reasoning in an LLM (e.g., for math, logic, planning, or tool use).
+Evaluate the prompt on the following criteria:
+1. ✅ Explicit Reasoning Instructions
+- Does the prompt tell the model to reason step-by-step?
+- Does it include instructions like “explain your thinking” or “think before you answer”?
+2. ✅ Structured Output Format
+- Does the prompt enforce a predictable output format (e.g., FUNCTION_CALL, JSON, numbered steps)?
+- Is the output easy to parse or validate?
+3. ✅ Separation of Reasoning and Tools
+- Are reasoning steps clearly separated from computation or tool-use steps?
+- Is it clear when to calculate, when to verify, when to reason?
+4. ✅ Conversation Loop Support
+- Could this prompt work in a back-and-forth (multi-turn) setting?
+- Is there a way to update the context with results from previous steps?
+5. ✅ Instructional Framing
+- Are there examples of desired behavior or “formats” to follow?
+- Does the prompt define exactly how responses should look?
+6. ✅ Internal Self-Checks
+- Does the prompt instruct the model to self-verify or sanity-check intermediate steps?
+7. ✅ Reasoning Type Awareness
+- Does the prompt encourage the model to tag or identify the type of reasoning used (e.g., arithmetic, logic, lookup)?
+8. ✅ Error Handling or Fallbacks
+- Does the prompt specify what to do if an answer is uncertain, a tool fails, or the model is unsure?
+9. ✅ Overall Clarity and Robustness
+- Is the prompt easy to follow?
+- Is it likely to reduce hallucination and drift?
+---
+Respond with a structured review in this format:json
+{
+"explicit_reasoning": true,
+"structured_output": true,
+"tool_separation": true,
+"conversation_loop": true,
+"instructional_framing": true,
+"internal_self_checks": false,
+"reasoning_type_awareness": false,
+"fallbacks": false,
+"overall_clarity": "Excellent structure, but could improve with self-checks and error fallbacks."
+}
+
+prompt:You are a math agent solving problems in iterations.
+                  You have access to various mathematical tools
+
+Available tools:
+1. show_reasoning(steps: array) - Show the step-by-step reasoning process
+2. verify_calculation(expression: string, expected: number) - Verify if a calculation is correct
+3. verify_method_response(response: string) - Verify if a calculation is correct
+4. draw_rectangle_in_paint(x1: integer, y1: integer, x2: integer, y2: integer) - Open MS paint and Draw a rectangle using the coordinates from (x1,y1) to (x2,y2)
+5. add_text_in_rectangle(x1: integer, y1: integer, x2: integer, y2: integer, text: string) - write text inside the rectangle in opened ms paint
+6. fallback(error: object) - fallback(error_response: dict) - Any validation error will be catched and stop the execution.
+7. internal_self_check(result: string) - perform internal self check for every step before verify result
+8. add(a: integer, b: integer) - Add two numbers
+9. calculate(expression: string) - Calculate the result of an expression
+10. open_paint() - Open Microsoft Paint maximized on secondary monitor
+11. send_email(to_email: string, subject: string, body: string) - Send an email using Gmail SMTP
+You must respond with EXACTLY ONE line in one of these formats (no additional text) and it should be in json format
+and have different json formats:
+1. For function calls: {"name":"function_name","expression":"(value1 + value2)/value3"}
+2. For function calls (for reasoning):
+        {"name":"function_name",
+         "reasoning_type":"type_of_reasoning",
+          "steps":[]
+        }
+2. For final answers:
+        {"name":"result",
+         "status":"completed"
+        }
+Important:
+- First, show reasoning and identify the type of reasoning used.
+- Then, perform the calculation using the 'calculate' tool.
+- Immediately after each 'calculate' call, use the 'verify_calculation' tool with the expression and the expected result to check if the calculation was correct.
+- Once the FINAL_ANSWER is calculated, print the value in MS paint.
+- Once the value is printed, verify the response of the print action (if applicable using 'verify_method_response').
+- Once the value is printed and  verify the response using 'verify_method_response'.
+- When a function returns a response (other than 'calculate'), use the 'verify_method_response' tool to ensure the response is valid or as expected.
+- Only give the final answer when you have completed all necessary calculations and verifications.
+- Do not repeat function calls with the same parameters.
+
+Examples:
+- FUNCTION_CALL:{"name":"show_reasoning",
+                 "reasoning_type":"arithmetic",
+                 "steps":["1. First solve the expression inside the first parentheses: 5 + 5",
+                        "2. Then divide or multiply the third params : 5+5/2",
+                        "3. Then open the ms paint and draw a rectangle",
+                        "4. Next add the calculated result inside the rectangle",
+                        "5. Finally complete the process"]
+                }
+- FUNCTION_CALL:{"name":"calculate",
+                 "expression":"5 + 5",
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"5 + 5",
+                 "expected":"10"
+                 }
+- FUNCTION_CALL:{
+                "name":"calculate",
+                "expression":"(5 + 5)/2"
+                }
+- FUNCTION_CALL:{"name":"verify_calculation",
+                 "expression":"(5 + 5)/2",
+                 "expected":"5"
+                 }
+- FUNCTION_CALL:{"name":"open_paint"}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"draw_rectangle_in_paint",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700}
+                }
+- FUNCTION_CALL:{"name":"add_text_in_rectangle",
+                 "arguments":{"x1":780,"y1":380,"x2":1140,"y2":700,"text":"Final result is 5"}}
+- FUNCTION_CALL:{"name":"verify_method_response","status":"success"}
+- FUNCTION_CALL:{"name":"send_email","arguments"
+                 "arguments":{"email":"mohan.ramadoss91@gmail.com","agent":"agent_calculator","result":"Final value is 5"}}
+- FINAL_ANSWER: {"name":"result","status":"completed"}
+
+DO NOT include any explanations or additional text.
+since it is automated request use the parameters mentioned in Examples.
+Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:
+LLM generation completed
+prompt evaluated result : ```json
+{
+"explicit_reasoning": true,
+"structured_output": true,
+"tool_separation": true,
+"conversation_loop": true,
+"instructional_framing": true,
+"internal_self_checks": false,
+"reasoning_type_awareness": true,
+"fallbacks": true,
+"overall_clarity": "Excellent structure, but could improve with self-checks and error fallbacks."
+}
+```
+Agent completed
+
+D:\EAG\EAG_Session5\Assign5>
